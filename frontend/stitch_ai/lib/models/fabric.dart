@@ -7,6 +7,7 @@ class Fabric {
   final double price;
   final int stock;
   final String supplierId;
+  final String imageUrlStr;
 
   const Fabric({
     required this.fabricId,
@@ -17,6 +18,7 @@ class Fabric {
     required this.price,
     required this.stock,
     required this.supplierId,
+    required this.imageUrlStr,
   });
 
   factory Fabric.fromJson(Map<String, dynamic> json) {
@@ -29,11 +31,15 @@ class Fabric {
       price: (json['price'] is num) ? (json['price'] as num).toDouble() : double.tryParse('${json['price']}') ?? 0.0,
       stock: (json['stock'] is num) ? (json['stock'] as num).toInt() : int.tryParse('${json['stock']}') ?? 0,
       supplierId: json['supplier_id']?.toString() ?? '',
+      imageUrlStr: json['image_url']?.toString() ?? '',
     );
   }
 
   String imageUrl({int width = 600, int height = 800}) {
-    // Prefer cloth-focused images from Unsplash Source without API keys
+    // Prefer backend-provided absolute media URL when available
+    final url = imageUrlStr.trim();
+    if (url.isNotEmpty) return url;
+    // Fallback: cloth-focused images from Unsplash Source without API keys
     final parts = [
       'fabric', 'textile', 'cloth', 'garment',
       material.trim(),

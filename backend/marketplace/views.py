@@ -53,5 +53,5 @@ class RecommendFabricView(APIView):
         fabrics_by_id = {f.fabric_id: f for f in queryset}
         ordered_records = [fabrics_by_id[fid] for fid in top_fabric_ids if fid in fabrics_by_id]
 
-        serializer = FabricSerializer(ordered_records, many=True)
+        serializer = FabricSerializer(ordered_records, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
