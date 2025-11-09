@@ -33,7 +33,17 @@ class Fabric {
   }
 
   String imageUrl({int width = 600, int height = 800}) {
-    final seed = fabricId.replaceAll('-', '');
-    return 'https://picsum.photos/seed/$seed/$width/$height';
+    // Prefer cloth-focused images from Unsplash Source without API keys
+    final parts = [
+      'fabric', 'textile', 'cloth', 'garment',
+      material.trim(),
+      pattern.trim(),
+      color.trim(),
+    ]
+        .where((p) => p.isNotEmpty)
+        .map((p) => p.toLowerCase().replaceAll(RegExp(r'\s+'), '-'))
+        .toList();
+    final query = parts.join(',');
+    return 'https://source.unsplash.com/${width}x${height}/?${query}';
   }
 }

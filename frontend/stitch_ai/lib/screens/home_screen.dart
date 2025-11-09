@@ -5,6 +5,7 @@ import 'package:shimmer/shimmer.dart';
 import '../models/fabric.dart';
 import '../services/api.dart';
 import 'try_on_screen.dart';
+import 'fabric_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -243,53 +244,60 @@ class _FabricCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
-    return Card(
-      elevation: 3,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: CachedNetworkImage(
-              imageUrl: item.imageUrl(width: 600, height: 800),
-              fit: BoxFit.cover,
-              width: double.infinity,
-              placeholder: (ctx, url) => Shimmer.fromColors(
-                baseColor: Colors.grey.shade300,
-                highlightColor: Colors.grey.shade100,
-                child: Container(color: Colors.grey.shade300),
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => FabricDetailScreen(item: item)),
+        );
+      },
+      child: Card(
+        elevation: 3,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: CachedNetworkImage(
+                imageUrl: item.imageUrl(width: 600, height: 800),
+                fit: BoxFit.cover,
+                width: double.infinity,
+                placeholder: (ctx, url) => Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: Container(color: Colors.grey.shade300),
+                ),
+                errorWidget: (ctx, url, err) => const Center(child: Icon(Icons.broken_image)),
               ),
-              errorWidget: (ctx, url, err) => const Center(child: Icon(Icons.broken_image)),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 4),
-                Text('${item.material} • ${item.color}${item.pattern.isNotEmpty ? ' • ${item.pattern}' : ''}',
-                    maxLines: 1, overflow: TextOverflow.ellipsis),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('৳${item.price.toStringAsFixed(2)}',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(color: color.primary)),
-                    _StockBadge(stock: item.stock),
-                  ],
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 4),
+                  Text('${item.material} • ${item.color}${item.pattern.isNotEmpty ? ' • ${item.pattern}' : ''}',
+                      maxLines: 1, overflow: TextOverflow.ellipsis),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('৳${item.price.toStringAsFixed(2)}',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: color.primary)),
+                      _StockBadge(stock: item.stock),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
